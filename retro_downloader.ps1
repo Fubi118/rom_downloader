@@ -152,6 +152,6 @@ $found_games_link_2.Clear();
     zx-spectrum
 
 .EXAMPLE
-    romsmode_downloader.ps1 -console gameboy
+    retro_downloader.ps1 -console gameboy
 
 #>
