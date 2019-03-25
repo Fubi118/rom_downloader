@@ -151,42 +151,7 @@ $found_games_link_2.Clear();
     z-machine-infocom
     zx-spectrum
 
-.PARAMETER genre
-    Misc
-    Action
-    Racing
-    Simulation
-    Strategy
-    Shooter
-    Sports
-    Fighting
-    Puzzle
-    Platform
-    Role Playing
-    Board Game
-    Card Game
-    Adventure
-    Beat Em Up
-    Turn Based Tactics
-    Adventure
-    Strategy
-    Role Playing
-    Compilation
-    Pinball
-
-.PARAMETER game_name
-Type a Search word e.g. "pokemon"
-
-.PARAMETER region
-    Europe
-    France
-    Germany
-    Japan
-    USA
-
 .EXAMPLE
-    rom_downloader_lsting.ps1 -console gameboy -game_name pokemon -region germany
-.EXAMPLE
-    rom_downloader_lsting.ps1 -console gameboy -genre Pinball
+    romsmode_downloader.ps1 -console gameboy
 
 #>
