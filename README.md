@@ -6,7 +6,7 @@ It uses "Invoke-WebRequest" to get all Roms from Website
 2. Use Script
   a. Open Powershell
   b. change to the directory where the script is
-  c. romsmode_downloader.ps1 -console gameboy //if you want to download all gameboy roms
+  c. retro_downloader.ps1 -console gameboy //if you want to download all gameboy roms
 3. Wait - Script is fetching the informations and Downloads the zip-files
 
 possible consoles
