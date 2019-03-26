@@ -1,5 +1,5 @@
-﻿param (
-$console = "gameboy"
+param (
+$console = "commodore-64"
 )
 $found_games = 
 $found_games_link_1 = @()
@@ -7,7 +7,7 @@ $found_games_link_2 = @()
 
 $save_file = ""
 
-for($i=0; $i -le 100; $i++) 
+for($i=0; $i -le 1000; $i++) 
 {
 $path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
 try{
@@ -15,13 +15,15 @@ $found_games += ((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -m
 $found_games_link_1 += @((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).href
 }
 catch{
-$i=100
+$i=1000
 }
 }
 $found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
-echo $found_games
+echo $found_games | select -Unique
 echo `n
-echo "need help? get-Help rom_downloader_listing.ps1"
+echo "Prepared Games for Download: ($found_games_link_2).count"
+echo `n
+echo "need help? get-Help rom_downloader.ps1"
 
 foreach($a in $found_games_link_2)
 {
@@ -151,7 +153,12 @@ $found_games_link_2.Clear();
     z-machine-infocom
     zx-spectrum
 
+
+
 .EXAMPLE
-    retro_downloader.ps1 -console gameboy
+    rom_downloader.ps1 -console gameboy
+
+.EXAMPLE
+    rom_downloader.ps1 -console commodore-64
 
 #>
