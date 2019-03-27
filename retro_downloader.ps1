@@ -20,9 +20,10 @@ $i=1000
 }
 }
 $found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
+$found_games_count = ($found_games_link_2).count
 echo $found_games | select -Unique
 echo `n
-echo "Prepared Games for Download: " ($found_games_link_2).count
+echo "Prepared Games for Download: " $found_games_count
 echo `n
 echo "need help? get-Help rom_downloader.ps1"
 
@@ -33,17 +34,24 @@ New-Item -ItemType Directory -Force -Path $folder
 
 foreach($a in $found_games_link_2)
 {
+
 $game_link_name = $a.Split("/")
 $game_download = ((Invoke-WebRequest -Uri $a).links | Where-Object {$_.class -eq "wait__link"}).href
 
 $save_file = $folder + $game_link_name[6] + ".zip"
 
 Invoke-WebRequest -Uri $game_download -OutFile $save_file
+$counter++
+
+Write-Progress -Activity "Download in Progress" -Status "$counter/$found_games_count complete" -PercentComplete (((100 / $found_games_count) * $counter))
+
 echo $game_link_name[6]
+
 }
 
-$found_games_link_1.Clear();
-$found_games_link_2.Clear();
+$found_games_link_1.Clear()
+$found_games_link_2.Clear()
+$counter = 0
 
 <#
 .SYNOPSIS
