@@ -4,6 +4,7 @@ $console = "gameboy"
 $found_games = 
 $found_games_link_1 = @()
 $found_games_link_2 = @()
+$counter = 0
 
 $folder = "$HOME\Desktop\roms\$console\"
 $save_file = ""
@@ -50,9 +51,7 @@ echo $game_link_name[6]
 
 }
 
-$found_games_link_1.Clear()
-$found_games_link_2.Clear()
-$counter = 0
+
 
 <#
 .SYNOPSIS
