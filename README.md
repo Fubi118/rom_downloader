@@ -1,4 +1,4 @@
-# romsmode_downloader
+# rom_downloader
 Powershell Script which downloads all roms from romsmode.
 It uses "Invoke-WebRequest" to get all Roms from Website
 
