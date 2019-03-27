@@ -8,6 +8,7 @@ $found_games_link_2 = @()
 $folder = "$HOME\Desktop\roms\$console\"
 $save_file = ""
 
+echo `n "gathering Games and Preparing Download... This can take some minutes" `n
 for($i=0; $i -le 1000; $i++) 
 {
 $path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
