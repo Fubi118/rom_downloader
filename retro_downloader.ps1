@@ -1,10 +1,11 @@
 param (
-$console = "commodore-64"
+$console = "gameboy"
 )
 $found_games = 
 $found_games_link_1 = @()
 $found_games_link_2 = @()
 
+$folder = "$HOME\Desktop\roms\$console\"
 $save_file = ""
 
 for($i=0; $i -le 1000; $i++) 
@@ -21,18 +22,24 @@ $i=1000
 $found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
 echo $found_games | select -Unique
 echo `n
-echo "Prepared Games for Download: ($found_games_link_2).count"
+echo "Prepared Games for Download: " ($found_games_link_2).count
 echo `n
 echo "need help? get-Help rom_downloader.ps1"
+
+If(!(Test-Path $folder))
+{
+New-Item -ItemType Directory -Force -Path $folder
+}
 
 foreach($a in $found_games_link_2)
 {
 $game_link_name = $a.Split("/")
 $game_download = ((Invoke-WebRequest -Uri $a).links | Where-Object {$_.class -eq "wait__link"}).href
 
-$save_file = "$HOME\Desktop\rom_games\" + $game_link_name[6] + ".zip"
+$save_file = $folder + $game_link_name[6] + ".zip"
 
 Invoke-WebRequest -Uri $game_download -OutFile $save_file
+echo $game_link_name[6]
 }
 
 $found_games_link_1.Clear();
