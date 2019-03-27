@@ -8,7 +8,7 @@ $found_games_link_2 = @()
 $folder = "$HOME\Desktop\roms\$console\"
 $save_file = ""
 
-echo `n "gathering Games and Preparing Download... This can take some minutes" `n
+echo `n "gathering Roms and Preparing Download... This can take some minutes" `n
 for($i=0; $i -le 1000; $i++) 
 {
 $path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
@@ -24,7 +24,7 @@ $found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "htt
 $found_games_count = ($found_games_link_2).count
 echo $found_games | select -Unique
 echo `n
-echo "Prepared Games for Download: " $found_games_count
+echo "Prepared Roms for Download: " $found_games_count
 echo `n
 echo "need help? get-Help rom_downloader.ps1"
 
