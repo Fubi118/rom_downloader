@@ -1,53 +1,52 @@
 param (
-$console = "gameboy"
+$console = "nintendo-64",
+$folder = "$HOME\Desktop\roms\$console\"
 )
 $found_games = 
 $found_games_link_1 = @()
 $found_games_link_2 = @()
 $counter = 0
+$loop = $true
 
-$folder = "$HOME\Desktop\roms\$console\"
 $save_file = ""
 
-echo `n "gathering Roms and Preparing Download... This can take some minutes" `n
-for($i=0; $i -le 1000; $i++) 
+Write-Host `n "gathering Roms and Preparing Download... This can take some minutes" `n
+for($i=0; $loop -eq $true; $i++) 
 {
-$path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
-try{
-$found_games += ((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).innerHTML
-$found_games_link_1 += @((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).href
-}
-catch{
-$i=1000
-}
+    $path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
+    try{
+        $found_games += ((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).innerHTML
+        $found_games_link_1 += @((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).href
+    }
+    catch{
+        $loop = $false
+    }
 }
 $found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
 $found_games_count = ($found_games_link_2).count
-echo $found_games | select -Unique
-echo `n
-echo "Prepared Roms for Download: " $found_games_count
-echo `n
-echo "need help? get-Help rom_downloader.ps1"
+Write-Host -Separator "`n" $found_games | select -Unique 
+Write-Host `n "Prepared Roms for Download: " $found_games_count `n
+Write-Host "need help? get-Help rom_downloader.ps1"
 
 If(!(Test-Path $folder))
 {
-New-Item -ItemType Directory -Force -Path $folder
+    New-Item -ItemType Directory -Force -Path $folder
 }
 
 foreach($a in $found_games_link_2)
 {
 
-$game_link_name = $a.Split("/")
-$game_download = ((Invoke-WebRequest -Uri $a).links | Where-Object {$_.class -eq "wait__link"}).href
 
-$save_file = $folder + $game_link_name[6] + ".zip"
 
-Invoke-WebRequest -Uri $game_download -OutFile $save_file
-$counter++
+    $game_link_name = $a.Split("/")
+    $game_download = ((Invoke-WebRequest -Uri $a).links | Where-Object {$_.class -eq "wait__link"}).href
 
-Write-Progress -Activity "Download in Progress" -Status "$counter/$found_games_count complete" -PercentComplete (((100 / $found_games_count) * $counter))
+    $save_file = $folder + $game_link_name[6] + ".zip"
 
-echo $game_link_name[6]
+    Write-Progress -Activity "Downloading: $($game_link_name[6])" -Status "$counter/$found_games_count complete" -PercentComplete (((100 / $found_games_count) * $counter))
+
+    Invoke-WebRequest -Uri $game_download -OutFile $save_file
+    $counter++
 
 }
 
@@ -168,7 +167,8 @@ echo $game_link_name[6]
     z-machine-infocom
     zx-spectrum
 
-
+.PARAMETER folder
+Path of the destination folder (e.g. D
 
 .EXAMPLE
     rom_downloader.ps1 -console gameboy
