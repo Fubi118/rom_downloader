@@ -1,14 +1,13 @@
 param (
-$console = "nintendo-64",
-$folder = "$HOME\Desktop\roms\$console\"
+    [string]$console = "nintendo-64",
+    [string]$folder = "$HOME\Desktop\roms\$console\"
 )
-$found_games = 
-$found_games_link_1 = @()
-$found_games_link_2 = @()
+$found_games = @()
+$found_games_links = @()
 $counter = 0
 $loop = $true
-
 $save_file = ""
+$wc = New-Object System.Net.WebClient
 
 Write-Host `n "gathering Roms and Preparing Download... This can take some minutes" `n
 for($i=0; $loop -eq $true; $i++) 
@@ -16,14 +15,14 @@ for($i=0; $loop -eq $true; $i++)
     $path = "https://romsmode.com/roms/" + $console + "/" + $i + "?genre=&name=&region="
     try{
         $found_games += ((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).innerHTML
-        $found_games_link_1 += @((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).href
+        $found_games_links += ((Invoke-WebRequest -Uri $path).links | Where-Object {$_.href -match "\d{6,6}"}).href
     }
     catch{
         $loop = $false
     }
 }
-$found_games_link_2 += $found_games_link_1.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
-$found_games_count = ($found_games_link_2).count
+$found_games_links = $found_games_links.Replace("https://romsmode.com/", "https://romsmode.com/download/") | select -Unique
+$found_games_count = ($found_games_links).count
 Write-Host -Separator "`n" $found_games | select -Unique 
 Write-Host `n "Prepared Roms for Download: " $found_games_count `n
 Write-Host "need help? get-Help rom_downloader.ps1"
@@ -33,21 +32,16 @@ If(!(Test-Path $folder))
     New-Item -ItemType Directory -Force -Path $folder
 }
 
-foreach($a in $found_games_link_2)
-{
-
-
-
-    $game_link_name = $a.Split("/")
-    $game_download = ((Invoke-WebRequest -Uri $a).links | Where-Object {$_.class -eq "wait__link"}).href
+$found_games_links | ForEach-Object {
+    $game_link_name = $_.Split("/")
+    $game_download = ((Invoke-WebRequest -Uri $_).links | Where-Object {$_.class -eq "wait__link"}).href
 
     $save_file = $folder + $game_link_name[6] + ".zip"
 
     Write-Progress -Activity "Downloading: $($game_link_name[6])" -Status "$counter/$found_games_count complete" -PercentComplete (((100 / $found_games_count) * $counter))
 
-    Invoke-WebRequest -Uri $game_download -OutFile $save_file
+    $wc.DownloadFile($game_download, $save_file)
     $counter++
-
 }
 
 
